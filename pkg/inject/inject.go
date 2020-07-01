@@ -552,7 +552,7 @@ func (conf *ResourceConfig) injectPodSpec(values *patch) {
 	}
 
 	if saVolumeMount != nil {
-		values.Global.Proxy.SAMountPath = &l5dcharts.SAMountPath{
+		values.Global.Proxy.SAMountPath = &l5dcharts.VolumeMountPath{
 			Name:      saVolumeMount.Name,
 			MountPath: saVolumeMount.MountPath,
 			ReadOnly:  saVolumeMount.ReadOnly,
@@ -603,6 +603,11 @@ func (conf *ResourceConfig) injectProxyInit(values *patch) {
 		},
 		Capabilities: values.Global.Proxy.Capabilities,
 		SAMountPath:  values.Global.Proxy.SAMountPath,
+		XTMountPath: &l5dcharts.VolumeMountPath{
+			MountPath: k8s.MountPathXtablesLock,
+			Name:      k8s.InitXtablesLockVolumeMountName,
+			SubPath:   k8s.MountSubPathXtablesLock,
+		},
 	}
 
 	if v := conf.pod.meta.Annotations[k8s.CloseWaitTimeoutAnnotation]; v != "" {
